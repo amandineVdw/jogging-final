@@ -3,8 +3,8 @@
 -- Evaluation BES Designer – 5XDEV-1
 -- ============================================
 
-CREATE DATABASE IF NOT EXISTS jogging;
-USE jogging;
+-- CREATE DATABASE IF NOT EXISTS jogging;
+-- USE jogging;
 
 -- ============================================
 -- Table : news

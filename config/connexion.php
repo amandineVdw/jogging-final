@@ -6,13 +6,16 @@
 // => permet de déployer sans changer ce fichier.
 // ============================================================
 
-$host   = getenv('DB_HOST') ?: 'localhost';
-$dbname = getenv('DB_NAME') ?: 'jogging';
-$user   = getenv('DB_USER') ?: 'root';
-$pass   = getenv('DB_PASS') ?: '';
+// Railway injecte MYSQLHOST, MYSQLUSER, etc. automatiquement.
+// En local (Laragon), ces variables n'existent pas → fallback sur localhost.
+$host   = getenv('MYSQLHOST')     ?: 'localhost';
+$dbname = getenv('MYSQLDATABASE') ?: 'jogging';
+$user   = getenv('MYSQLUSER')     ?: 'root';
+$pass   = getenv('MYSQLPASSWORD') ?: '';
+$port   = getenv('MYSQLPORT')     ?: '3306';
 
 try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $user, $pass);
+    $pdo = new PDO("mysql:host=$host;port=$port;dbname=$dbname;charset=utf8", $user, $pass);
     // POURQUOI ERRMODE_EXCEPTION : si une requête SQL plante,
     // PHP génère une vraie erreur visible au lieu de passer en silence.
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
