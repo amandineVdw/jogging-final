@@ -1,49 +1,48 @@
 <?php
 // ============================================================
 // ROUTEUR CENTRAL — index.php
-// C'est la porte d'entrée unique du site.
-// Toutes les URLs passent par ici : index.php?page=news, etc.
 // ============================================================
 
-// POURQUOI session_start() en tout premier :
-// Doit être avant tout output HTML et avant tout header().
-// Sans ça, les variables de session ($_SESSION) ne sont pas accessibles.
 session_start();
 
-// Affichage des erreurs (à retirer avant mise en prod)
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
-// --- Routeur : quelle page afficher ? ---
+// --- Thème actif (stocké en session, défaut : officiel) ---
+$theme = $_SESSION['theme'] ?? 'officiel';
+
+// --- Routeur ---
 $page = $_GET['page'] ?? 'accueil';
 
-// SÉCURITÉ — liste blanche des pages autorisées.
-// Sans ça, un visiteur pourrait injecter n'importe quel chemin de fichier.
 $pages_autorisees = ['accueil', 'news', 'resultats', 'contact', 'admin-news', 'admin-resultats'];
-
 if (!in_array($page, $pages_autorisees)) {
     $page = 'accueil';
 }
 
-// --- PROTECTION ADMIN ---
-// POURQUOI ici (dans le routeur) et pas dans chaque page admin :
-// On centralise la sécurité en un seul endroit.
-// Si on oublie de vérifier dans une page admin, cette garde couvre quand même.
+// --- Protection admin ---
 $pages_admin = ['admin-news', 'admin-resultats'];
-
 if (in_array($page, $pages_admin)) {
     if (empty($_SESSION['connecte'])) {
-        // Pas connecté → page login
         header('Location: login.php');
         exit();
     }
     if ($_SESSION['role'] !== 'admin') {
-        // Connecté mais pas admin → retour accueil
         $page = 'accueil';
     }
 }
 
-// --- Initiale pour l'avatar nav ---
+// --- Titres dynamiques par page ---
+$titres = [
+    'accueil'          => 'Accueil',
+    'news'             => 'News',
+    'resultats'        => 'Résultats',
+    'contact'          => 'Contact',
+    'admin-news'       => 'Admin — News',
+    'admin-resultats'  => 'Admin — Résultats',
+];
+$titre_page = ($titres[$page] ?? 'Page') . ' — Jogging de l\'IFOSUP';
+
+// --- Initiale avatar ---
 $initiale = '';
 if (!empty($_SESSION['nom'])) {
     $initiale = strtoupper(mb_substr($_SESSION['nom'], 0, 1));
@@ -54,28 +53,28 @@ if (!empty($_SESSION['nom'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jogging de l'IFOSUP</title>
+    <title><?= htmlspecialchars($titre_page) ?></title>
+    <!-- Favicon emoji 🏃 -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏃</text></svg>">
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
+<!-- POURQUOI body class : le CSS utilise body.theme-dark pour surcharger
+     les variables CSS sans toucher au HTML. Un seul attribut change tout. -->
+<body class="theme-<?= htmlspecialchars($theme) ?>">
 
 <!-- ===== NAVIGATION ===== -->
 <nav>
-
-    <!-- Liens publics -->
     <a href="index.php?page=accueil"   <?= $page === 'accueil'   ? 'class="actif"' : '' ?>>Accueil</a>
     <a href="index.php?page=news"      <?= $page === 'news'      ? 'class="actif"' : '' ?>>News</a>
     <a href="index.php?page=resultats" <?= $page === 'resultats' ? 'class="actif"' : '' ?>>Résultats</a>
     <a href="index.php?page=contact"   <?= $page === 'contact'   ? 'class="actif"' : '' ?>>Contact</a>
 
     <?php if (!empty($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
-        <!-- Liens admin — visibles uniquement pour le rôle admin -->
         <div class="nav-sep"></div>
         <a href="index.php?page=admin-news"      <?= $page === 'admin-news'      ? 'class="actif"' : '' ?>>Admin News</a>
         <a href="index.php?page=admin-resultats" <?= $page === 'admin-resultats' ? 'class="actif"' : '' ?>>Admin Résultats</a>
     <?php endif; ?>
 
-    <!-- Zone utilisateur — poussée à droite par margin-left: auto dans le CSS -->
     <div class="nav-user">
         <?php if (!empty($_SESSION['connecte'])): ?>
             <div class="nav-avatar"><?= htmlspecialchars($initiale) ?></div>
@@ -85,13 +84,28 @@ if (!empty($_SESSION['nom'])) {
             <a href="login.php" class="btn-connexion">Connexion</a>
         <?php endif; ?>
     </div>
-
 </nav>
 
 <!-- ===== CONTENU ===== -->
 <div class="container">
     <?php include("pages/{$page}.php"); ?>
 </div>
+
+<!-- ===== FOOTER — switcher de thème discret ===== -->
+<!-- 3 petits cercles. Faut savoir qu'ils sont là. -->
+<footer>
+    <div class="theme-switcher">
+        <a href="actions/action-theme.php?theme=officiel"
+           class="theme-dot dot-officiel <?= $theme === 'officiel' ? 'actif' : '' ?>"
+           title="Officiel"></a>
+        <a href="actions/action-theme.php?theme=dark"
+           class="theme-dot dot-dark <?= $theme === 'dark' ? 'actif' : '' ?>"
+           title="Dark"></a>
+        <a href="actions/action-theme.php?theme=innojp"
+           class="theme-dot dot-innojp <?= $theme === 'innojp' ? 'actif' : '' ?>"
+           title="Innojp"></a>
+    </div>
+</footer>
 
 </body>
 </html>
