@@ -1,0 +1,634 @@
+/* ============================================================
+   JOGGING DE L'IFOSUP — Feuille de style principale
+   Organisée en sections numérotées pour être lisible et défendable
+   ============================================================ */
+
+
+/* ============================================================
+   1. VARIABLES CSS
+   POURQUOI : changer une couleur ici la change sur TOUT le site.
+   C'est le système de thème — une seule source de vérité.
+   ============================================================ */
+:root {
+    /* Couleurs principales */
+    --primaire:        #2c3e50;
+    --primaire-hover:  #34495e;
+    --accent:          #e74c3c;
+    --accent-hover:    #c0392b;
+
+    /* Podium résultats */
+    --or:              #f39c12;
+    --argent:          #95a5a6;
+    --bronze:          #cd7f32;
+
+    /* Fond et cartes */
+    --fond-page:       #f0f2f5;
+    --fond-carte:      #ffffff;
+    --fond-hover-row:  #f8f9fa;
+
+    /* Texte */
+    --texte:           #2d3436;
+    --texte-doux:      #636e72;
+
+    /* Bordures et ombres */
+    --bordure:         #e0e0e0;
+    --ombre:           0 2px 12px rgba(0, 0, 0, 0.08);
+    --ombre-nav:       0 2px 8px rgba(0, 0, 0, 0.15);
+
+    /* Feedback */
+    --succes-fond:     #eafaf1;
+    --succes-texte:    #1e8449;
+    --erreur-fond:     #fdf2f2;
+    --erreur-texte:    #c0392b;
+
+    /* Layout */
+    --largeur-max:     920px;
+    --rayon:           6px;
+    --rayon-lg:        10px;
+
+    /* Transitions */
+    --transition:      0.2s ease;
+}
+
+
+/* ============================================================
+   2. RESET & BASE
+   ============================================================ */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: var(--fond-page);
+    color: var(--texte);
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+
+/* ============================================================
+   3. NAVIGATION
+   ============================================================ */
+nav {
+    background: var(--primaire);
+    padding: 0 30px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    box-shadow: var(--ombre-nav);
+    flex-wrap: wrap;
+    min-height: 54px;
+}
+
+nav a {
+    color: #bdc3c7;
+    text-decoration: none;
+    padding: 8px 14px;
+    border-radius: var(--rayon);
+    font-size: 14px;
+    transition: background var(--transition), color var(--transition);
+    white-space: nowrap;
+}
+
+nav a:hover {
+    background: var(--primaire-hover);
+    color: #ffffff;
+}
+
+nav a.actif {
+    background: var(--accent);
+    color: #ffffff;
+    font-weight: 600;
+}
+
+/* Séparateur vertical entre nav publique et admin */
+.nav-sep {
+    width: 1px;
+    height: 24px;
+    background: #455a64;
+    margin: 0 6px;
+}
+
+/* Zone utilisateur — poussée à droite */
+.nav-user {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Bulle avec initiale de l'utilisateur */
+.nav-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: white;
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
+    flex-shrink: 0;
+}
+
+.nav-nom {
+    color: #ecf0f1;
+    font-size: 13px;
+}
+
+.nav-user a.btn-logout {
+    background: rgba(231, 76, 60, 0.15);
+    color: #e74c3c;
+    border: 1px solid rgba(231, 76, 60, 0.3);
+    padding: 5px 12px;
+    border-radius: var(--rayon);
+    font-size: 13px;
+    text-decoration: none;
+    transition: background var(--transition);
+}
+
+.nav-user a.btn-logout:hover {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+}
+
+.nav-user a.btn-connexion {
+    background: var(--accent);
+    color: white;
+    padding: 6px 16px;
+    border-radius: var(--rayon);
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background var(--transition);
+}
+
+.nav-user a.btn-connexion:hover {
+    background: var(--accent-hover);
+}
+
+
+/* ============================================================
+   4. LAYOUT — conteneur principal
+   ============================================================ */
+.container {
+    max-width: var(--largeur-max);
+    margin: 36px auto;
+    background: var(--fond-carte);
+    padding: 36px 44px;
+    border-radius: var(--rayon-lg);
+    box-shadow: var(--ombre);
+}
+
+h1 {
+    color: var(--primaire);
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--bordure);
+}
+
+h2 {
+    color: var(--primaire);
+    font-size: 18px;
+    font-weight: 600;
+    margin: 28px 0 14px;
+}
+
+p {
+    color: var(--texte-doux);
+    margin-bottom: 12px;
+}
+
+
+/* ============================================================
+   5. TABLEAU RÉSULTATS — avec podium top 3
+   ============================================================ */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 8px;
+}
+
+thead th {
+    background: var(--primaire);
+    color: white;
+    padding: 12px 14px;
+    text-align: left;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+thead th:first-child { border-radius: var(--rayon) 0 0 0; }
+thead th:last-child  { border-radius: 0 var(--rayon) 0 0; }
+
+tbody td {
+    padding: 11px 14px;
+    border-bottom: 1px solid var(--bordure);
+    font-size: 14px;
+}
+
+tbody tr:hover td {
+    background: var(--fond-hover-row);
+}
+
+/* --- Podium --- */
+tbody tr.pos-1 td { font-weight: 700; color: var(--or);     background: #fffbf0; }
+tbody tr.pos-2 td { font-weight: 600; color: var(--argent); background: #f8f9fa; }
+tbody tr.pos-3 td { font-weight: 600; color: var(--bronze); background: #fdf6f0; }
+
+tbody tr.pos-1:hover td { background: #fff5d6; }
+tbody tr.pos-2:hover td { background: #f0f1f2; }
+tbody tr.pos-3:hover td { background: #faeee5; }
+
+.badge-pos {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 700;
+}
+
+
+/* ============================================================
+   6. NEWS
+   ============================================================ */
+.news-item {
+    padding: 18px 0;
+    border-bottom: 1px solid var(--bordure);
+}
+
+.news-item:last-child { border-bottom: none; }
+
+.news-item h3 {
+    color: var(--primaire);
+    font-size: 16px;
+    margin-bottom: 8px;
+}
+
+.news-item p {
+    font-size: 14px;
+    color: var(--texte-doux);
+    margin: 0;
+}
+
+
+/* ============================================================
+   7. FORMULAIRES
+   ============================================================ */
+.champ {
+    margin-bottom: 16px;
+}
+
+label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--primaire);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+input[type=text],
+input[type=time],
+input[type=password],
+textarea,
+select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--bordure);
+    border-radius: var(--rayon);
+    font-size: 14px;
+    color: var(--texte);
+    background: #fafafa;
+    transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+input[type=text]:focus,
+input[type=time]:focus,
+input[type=password]:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.12);
+    background: #fff;
+}
+
+textarea { height: 130px; resize: vertical; }
+
+/* Bouton principal soumettre */
+input[type=submit],
+button[type=submit] {
+    background: var(--primaire);
+    color: white;
+    padding: 10px 24px;
+    border: none;
+    border-radius: var(--rayon);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: background var(--transition), transform var(--transition);
+}
+
+input[type=submit]:hover,
+button[type=submit]:hover {
+    background: var(--primaire-hover);
+    transform: translateY(-1px);
+}
+
+/* Radio sexe */
+.radio-group {
+    display: flex;
+    gap: 20px;
+    margin-top: 4px;
+}
+
+.radio-group label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-transform: none;
+    font-weight: normal;
+    font-size: 14px;
+    cursor: pointer;
+    color: var(--texte);
+}
+
+.radio-group input[type=radio] {
+    width: auto;
+    cursor: pointer;
+    accent-color: var(--accent);
+}
+
+
+/* ============================================================
+   8. BOUTONS ADMIN (Supprimer / Modifier)
+   ============================================================ */
+.btn-sup,
+.btn-mod {
+    padding: 5px 14px;
+    border: none;
+    border-radius: var(--rayon);
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    transition: background var(--transition), transform var(--transition);
+}
+
+.btn-sup { background: var(--accent); color: white; }
+.btn-sup:hover { background: var(--accent-hover); transform: translateY(-1px); }
+
+.btn-mod { background: #3498db; color: white; }
+.btn-mod:hover { background: #2980b9; transform: translateY(-1px); }
+
+/* Ligne admin dans la liste */
+.admin-ligne {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--bordure);
+}
+
+.admin-ligne:last-child { border-bottom: none; }
+.admin-ligne .nom { flex: 1; font-size: 14px; color: var(--texte); }
+.admin-ligne form { display: inline; }
+
+/* Formulaire modification inline */
+.form-modifier {
+    background: #f8f9fa;
+    border: 1px solid var(--bordure);
+    border-radius: var(--rayon);
+    padding: 18px;
+    margin: 10px 0;
+}
+
+.form-modifier a.btn-annuler {
+    margin-left: 12px;
+    color: var(--texte-doux);
+    font-size: 13px;
+    text-decoration: none;
+}
+
+.form-modifier a.btn-annuler:hover {
+    color: var(--accent);
+}
+
+
+/* ============================================================
+   9. MESSAGES DE FEEDBACK
+   ============================================================ */
+.msg-ok {
+    background: var(--succes-fond);
+    color: var(--succes-texte);
+    border: 1px solid #a9dfbf;
+    border-left: 4px solid var(--succes-texte);
+    padding: 12px 16px;
+    border-radius: var(--rayon);
+    margin-bottom: 18px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.msg-err {
+    background: var(--erreur-fond);
+    color: var(--erreur-texte);
+    border: 1px solid #f1aeb5;
+    border-left: 4px solid var(--erreur-texte);
+    padding: 12px 16px;
+    border-radius: var(--rayon);
+    margin-bottom: 18px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+
+/* ============================================================
+   10. PAGE DE CONNEXION
+   ============================================================ */
+body.page-login {
+    background: var(--primaire);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+.login-wrapper {
+    width: 100%;
+    max-width: 420px;
+    padding: 20px;
+}
+
+.login-box {
+    background: var(--fond-carte);
+    border-radius: var(--rayon-lg);
+    padding: 44px 44px 36px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+    text-align: center;
+}
+
+.login-logo {
+    font-size: 48px;
+    margin-bottom: 16px;
+    line-height: 1;
+}
+
+.login-titre {
+    font-size: 20px;
+    color: var(--primaire);
+    font-weight: 700;
+    margin-bottom: 4px;
+    border: none;
+    padding: 0;
+}
+
+.login-sous-titre {
+    font-size: 13px;
+    color: var(--texte-doux);
+    margin-bottom: 28px;
+}
+
+.login-form {
+    text-align: left;
+}
+
+.login-form .champ label {
+    font-size: 11px;
+    color: var(--texte-doux);
+}
+
+.btn-login {
+    width: 100%;
+    padding: 12px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: var(--rayon);
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background var(--transition), transform var(--transition);
+}
+
+.btn-login:hover {
+    background: var(--accent-hover);
+    transform: translateY(-1px);
+}
+
+.login-retour {
+    display: block;
+    margin-top: 22px;
+    font-size: 13px;
+    color: var(--texte-doux);
+    text-decoration: none;
+}
+
+.login-retour:hover {
+    color: var(--accent);
+}
+
+
+/* ============================================================
+   11. PAGE CONTACT
+   ============================================================ */
+.contact-bloc {
+    display: flex;
+    gap: 32px;
+    align-items: flex-start;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+.contact-info {
+    min-width: 200px;
+    line-height: 2;
+    font-size: 14px;
+    color: var(--texte-doux);
+}
+
+.contact-info strong {
+    color: var(--texte);
+    font-size: 15px;
+}
+
+iframe {
+    border: 0;
+    border-radius: var(--rayon);
+    flex: 1;
+    min-width: 280px;
+}
+
+
+/* ============================================================
+   12. ACCUEIL — message de bienvenue
+   ============================================================ */
+.bienvenue-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, var(--primaire), var(--primaire-hover));
+    color: white;
+    padding: 12px 20px;
+    border-radius: var(--rayon-lg);
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 24px;
+    box-shadow: var(--ombre);
+}
+
+
+/* ============================================================
+   13. RESPONSIVE — mobile
+   ============================================================ */
+@media (max-width: 640px) {
+
+    nav {
+        padding: 8px 16px;
+    }
+
+    nav a {
+        padding: 6px 10px;
+        font-size: 13px;
+    }
+
+    .nav-user {
+        margin-left: 0;
+        width: 100%;
+        padding: 6px 0;
+        border-top: 1px solid #455a64;
+        margin-top: 4px;
+    }
+
+    .container {
+        margin: 16px;
+        padding: 20px 20px;
+        border-radius: var(--rayon);
+    }
+
+    h1 { font-size: 20px; }
+
+    .contact-bloc {
+        flex-direction: column;
+    }
+
+    iframe {
+        width: 100%;
+        height: 220px;
+    }
+
+    .admin-ligne {
+        flex-wrap: wrap;
+    }
+}
